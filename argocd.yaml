@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: frontend-production-hackerlap
+  namespace: argocd
+  labels:
+    creativeadvtech.ml/argo: app
+    creativeadvtech.ml/project: hackerlap
+    creativeadvtech.ml/app: frontend
+    creativeadvtech.ml/env: production
+spec:
+  project: clients-staging
+  source:
+    repoURL: 'git@bitbucket.org:creativeadvtech/sar-helm-charts.git'
+    path: hackerlap
+    targetRevision: master
+    helm:
+      releaseName: hackerlap
+      valueFiles:
+        - values-production.yaml
+  destination:
+    server: 'https://29CFC5A59030239CDD362DB570F88E37.gr7.eu-central-1.eks.amazonaws.com'
+    namespace: hackerlap
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
+      allowEmpty: false
